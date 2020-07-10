@@ -19,7 +19,10 @@ app.use(cors())
 app.get('/', async (req, res) => {
     console.log(knex)
     const records = await knex
+    // look at the records
     .table('habit_records')
+
+    //and join with habits in order to get habit name, etc.
     .innerJoin('habits', `habit_records.habit_id`, `habits.id`)
     //filter by record date
     .where('habit_records.date_completed', '2020-07-12 22:52:05')
