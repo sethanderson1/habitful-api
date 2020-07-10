@@ -1,1 +1,4 @@
-DROP TABLE habits;
+
+DROP TABLE IF EXISTS habit_records;
+DROP TABLE IF EXISTS habits;
+DROP TYPE IF EXISTS habit_units;
