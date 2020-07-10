@@ -4,7 +4,7 @@ CREATE TABLE habits (
     description TEXT,
     num_times INTEGER NOT NULL,
     unit_time TEXT NOT NULL, -- do I need ENUM TYPES thing here to select between day, week, month?
-    dates_accomplished TEXT[], -- this is an array of dates the habit was accomplished
+    dates_completed TEXT[], -- this is an array of dates the habit was completed
     date_created TIMESTAMP DEFAULT now() NOT NULL,
     date_modified TIMESTAMP DEFAULT now()
 );
