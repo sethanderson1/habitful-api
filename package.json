@@ -1,7 +1,7 @@
 {
-  "name": "habitful-api",
+  "name": "recipe-repo-api",
   "version": "1.0.0",
-  "description": "Track progress on your habits with Habitful!",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "mocha --require test/setup.js",
@@ -14,30 +14,32 @@
     "deploy": "git push heroku master"
   },
   "keywords": [],
+  "engines": {
+    "node": "v12.16.1"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.0",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "helmet": "^3.22.0",
-    "morgan": "^1.10.0"
+    "helmet": "^3.22.1",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^0.21.1",
+    "morgan": "^1.10.0",
+    "path": "^0.12.7",
+    "pg": "^7.12.1",
+    "postgrator": "^4.0.0",
+    "postgrator-cli": "^3.3.0",
+    "xss": "^1.0.7"
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "cross-env": "^7.0.2",
     "mocha": "^7.1.2",
     "nodemon": "^2.0.3",
     "supertest": "^4.0.2"
-  },
-  "directories": {
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sethanderson1/express-boilerplate.git"
-  },
-  "bugs": {
-    "url": "https://github.com/sethanderson1/express-boilerplate/issues"
-  },
-  "homepage": "https://github.com/sethanderson1/express-boilerplate#readme"
+  }
 }
