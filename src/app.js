@@ -17,17 +17,22 @@ app.use(helmet())
 app.use(cors())
 
 app.get('/', async (req, res) => {
-    console.log(knex)
+    // console.log(knex)
     const records = await knex
     // look at the records
-    .table('habit_records')
-
+    .from('habit_records')
+    
     //and join with habits in order to get habit name, etc.
     .innerJoin('habits', `habit_records.habit_id`, `habits.id`)
-    //filter by record date
-    .where('habit_records.date_completed', '2020-07-12 22:52:05')
-    .select(['habits.habit_name', 'habit_records.date_completed'])
+    //filter by record date. and by interval expecially
+    // .where('habit_records.date_completed', '2020-07-12 22:52:05')
+    .select(['habits.name', 'habit_records.date_completed'])
     res.send(JSON.stringify({records}))
+
+    // why timestamps coming back with Z at the end?? no Z in database...
+    console.log('records', records)
+
+    
 
     // res.send('Hello, world!')
 })
