@@ -1,20 +1,22 @@
-require('dotenv').config()
-const express = require('express')
-const morgan = require('morgan')
-const cors = require('cors')
-const helmet = require('helmet')
-const { NODE_ENV } = require('./config')
-const knex = require('./db')()
+require('dotenv').config();
+const express = require('express');
+const morgan = require('morgan');
+const cors = require('cors');
+const helmet = require('helmet');
+const { NODE_ENV } = require('./config');
+const dayjs = require('dayjs');
+const knex = require('./db')();
 
-const app = express()
+
+const app = express();
 
 const morganOption = (NODE_ENV === 'production')
     ? 'tiny'
     : 'common';
 
-app.use(morgan(morganOption))
-app.use(helmet())
-app.use(cors())
+app.use(morgan(morganOption));
+app.use(helmet());
+app.use(cors());
 
 app.get('/', async (req, res) => {
     // console.log(knex)
@@ -24,17 +26,11 @@ app.get('/', async (req, res) => {
     
     //and join with habits in order to get habit name, etc.
     .innerJoin('habits', `habit_records.habit_id`, `habits.id`)
-    //filter by record date. and by interval expecially
+    //filter by record date. and by interval es^pecially
     // .where('habit_records.date_completed', '2020-07-12 22:52:05')
-    .select(['habits.name', 'habit_records.date_completed'])
-    res.send(JSON.stringify({records}))
+    .select(['habits.name', 'habit_records.date_completed']);
+    res.send(JSON.stringify({records}));
 
-    // why timestamps coming back with Z at the end?? no Z in database...
-    console.log('records', records)
-
-    
-
-    // res.send('Hello, world!')
 })
 
 app.use(function errorHandler(error, req, res, next) {
