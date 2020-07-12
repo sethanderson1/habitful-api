@@ -5,32 +5,36 @@ const cors = require('cors');
 const helmet = require('helmet');
 const { NODE_ENV } = require('./config');
 const dayjs = require('dayjs');
-const knex = require('./db')();
+const { CLIENT_ORIGIN } = require('./config');
 
+const usersRouter = require('./users/users-router');
+// const authRouter = require('./auth/auth-router');
 
 const app = express();
 
 const morganOption = (NODE_ENV === 'production')
     ? 'tiny'
     : 'common';
-
 app.use(morgan(morganOption));
 app.use(helmet());
-app.use(cors());
+app.use(
+    cors({
+        origin: CLIENT_ORIGIN
+    })
+);
+
+app.use(`/api/users`, usersRouter);
 
 app.get('/', async (req, res) => {
-    // console.log(knex)
     const records = await knex
     // look at the records
     .from('habit_records')
-    
     //and join with habits in order to get habit name, etc.
     .innerJoin('habits', `habit_records.habit_id`, `habits.id`)
     //filter by record date. and by interval es^pecially
     // .where('habit_records.date_completed', '2020-07-12 22:52:05')
     .select(['habits.name', 'habit_records.date_completed']);
     res.send(JSON.stringify({records}));
-
 })
 
 app.use(function errorHandler(error, req, res, next) {

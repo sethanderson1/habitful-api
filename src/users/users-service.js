@@ -4,14 +4,16 @@ const xss = require('xss');
 const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/;
 
 const UsersService = {
-    getAllUsers(knex) {
-        return knex.select('*').from('users');
-    },
+    // getAllUsers(knex) {
+    //     return knex.select('*').from('users');
+    // },
     hashPassword(password) {
         return bcrypt.hash(password, 10);
     },
     insertUser(knex, newUser) {
-        newUser.user_name = newUser.user_name.toLowerCase();
+        newUser.email = newUser.email.toLowerCase();
+        console.log('insertUser ran')
+
         return knex
             .insert(newUser)
             .into('users')
@@ -20,15 +22,17 @@ const UsersService = {
                 return rows[0]
             });
     },
-    hasUserWithUserName(knex, user_name) {
-        user_name = user_name.toLowerCase();
+    hasUserWithEmail(knex, email) {
+        email = email.toLowerCase();
+        console.log('email', email)
         return knex.select('*')
             .from('users')
-            .where({user_name})
+            .where({email})
             .first()
             .then(user => !!user);
     },
     validatePassword(password) {
+        console.log('password', password)
         if (password.length < 8) {
             return 'Password must be longer than 8 characters';
         };
@@ -45,7 +49,8 @@ const UsersService = {
     serializeUser(user) {
         return {
             id: user.id,
-            user_name: xss(user.user_name),
+            name: xss(user.name),
+            email: xss(user.email),
             date_created: user.date_created,
             date_modified: null,
         };
