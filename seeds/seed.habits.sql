@@ -1,5 +1,9 @@
 BEGIN;
 
+-- todo: had issue with duplicate key error when inserting into 
+-- habit_records. Need to sort out how setval thing works and 
+-- ensure it preents this type of error.
+
 TRUNCATE
 habit_records,
 habits

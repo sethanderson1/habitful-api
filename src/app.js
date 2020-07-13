@@ -10,6 +10,7 @@ const { CLIENT_ORIGIN } = require('./config');
 const usersRouter = require('./users/users-router');
 // const authRouter = require('./auth/auth-router');
 const habitsRouter = require('./habits/habits-router');
+const habitRecordsRouter = require('./habit_records/habit_records-router');
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(
 
 app.use(`/api/users`, usersRouter);
 app.use(`/api/habits`, habitsRouter);
+app.use(`/api/habit-records`, habitRecordsRouter);
 
 app.get('/', async (req, res) => {
     const records = await knex
