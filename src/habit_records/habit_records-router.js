@@ -2,11 +2,28 @@ const path = require('path');
 const express = require('express');
 // const HabitsService = require('./habits-service');
 const HabitRecordsService = require('./habit_records-service');
+const habitsRouter = require('../habits/habits-router');
 // const { requireAuth } = require('../middleware/jwt-auth');
 const habitRecordsRouter = express.Router();
 const jsonParser = express.json();
 
 // todo: uncomment const id = 1 when put in requireAuth
+
+
+// paths needed:
+
+// route(/)
+// get all habit records from user
+// post habit record
+
+// route(/habit_id)
+// get all habit records from user with specific habit_id
+
+// route(/habit_id/habit_records_id)
+// get single habit record
+// delete single habit record
+// patch single habit record ??
+
 
 habitRecordsRouter
     .route('/')
@@ -65,45 +82,111 @@ habitRecordsRouter
             .catch(next);
     });
 
-// habitsRouter
-//     .route('/:habit_id')
-//     // .all(requireAuth)
-//     .all((req, res, next) => {
-//         // *** uncomment when i add authrouter
-//         // const { id } = req.user
-//         const id = 1;
-//         const { habit_id } = req.params;
-//         const db = req.app.get('db');
-//         HabitRecordsService.getById(
-//             db,
-//             habit_id
-//         )
-//             .then(habit => {
-//                 if (!habit) {
-//                     return res
-//                         .status(404)
-//                         .json({
-//                             error: {
-//                                 message: `Habit doesn't exist`
-//                             }
-//                         })
-//                 };
-//                 if (habit.user_id !== id) {
-//                     return res.status(403)
-//                         .json({
-//                             error: {
-//                                 message: `Forbidden`
-//                             }
-//                         });
-//                 };
-//                 res.habit = habit;
-//                 next();
-//             })
-//             .catch(next);
-//     })
-//     .get((req, res, next) => {
-//         res.status(200).json(HabitRecordsService.serializeHabit(res.habit));
-//     })
+habitRecordsRouter
+    .route('/:habit_id')
+    // .all(requireAuth)
+    .all((req, res, next) => {
+        // *** uncomment when i add authrouter
+        // const { id } = req.user
+        const id = 1;
+        const { habit_id } = req.params;
+        const db = req.app.get('db');
+        HabitRecordsService.getHabitRecordsByHabitId(
+            db,
+            habit_id
+        )
+            .then(habit_records => {
+                if (!habit_records) {
+                    return res
+                        .status(404)
+                        .json({
+                            error: {
+                                message: `Habit doesn't exist`
+                            }
+                        })
+                };
+                // todo: do i need a condition for when 
+                // user tries to manually type in a number in
+                // the URL for habit_id that they dont own, 
+                // or will the auth middleware take care of that
+                // i forgot... think auth takes care of it...
+
+                res.habit_records = habit_records;
+                next();
+            })
+            .catch(next);
+    })
+    .get((req, res, next) => {
+        res.status(200).json(res.habit_records.map(
+            HabitRecordsService.serializeHabitRecord
+        ))
+    });
+
+habitRecordsRouter
+// .route('/:habit_id/:habit_records_id')
+.route('/record/:habit_records_id')
+// .all(requireAuth)
+    .all((req, res, next) => {
+        HabitRecordsService.getById(
+            req.app.get('db'),
+            req.params.habit_records_id
+        )
+            .then(habit_record => {
+                if (!habit_record) {
+                    return res
+                        .status(404)
+                        .json({
+                            error: {
+                                message: `Habit record doesn't exist`
+                            }
+                        })
+                }
+                // if (habit_record.author_id !== id) {
+                //     // console.log('Forbidden path')
+                //     return res.status(403)
+                //         .json({
+                //             error: {
+                //                 message: `Forbidden`
+                //             }
+                //         });
+                // };
+                res.habit_record = habit_record;
+                next();
+            })
+            .catch(next);
+    })
+    .get((req, res, next) => {
+        res.status(200).json(HabitRecordsService
+            .serializeHabitRecord(res.habit_record))
+    })
+    .delete((req, res, next) => {
+        const { habit_records_id } = req.params;
+        const id = habit_records_id;
+        HabitRecordsService.deleteHabitRecord(
+            req.app.get('db'),
+            id
+        )
+            .then(numRowsAffected => {
+                res.status(204).end()
+            })
+            .catch(next)
+    })
+
+
+module.exports = habitRecordsRouter
+
+
+
+
+
+
+
+
+
+
+
+
+
 //     .delete((req, res, next) => {
 //         HabitRecordsService.deleteHabit(
 //             req.app.get('db'),
@@ -141,6 +224,5 @@ habitRecordsRouter
 //                 res.status(204).end();
 //             })
 //             .catch(next);
-//     });
+    // }
 
-module.exports = habitRecordsRouter
