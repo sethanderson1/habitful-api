@@ -1,6 +1,9 @@
-const app = require('./app')
+const app = require('./app');
 const knex = require('knex');
-const { PORT, DATABASE_URL } = require('./config')
+const { PORT, DATABASE_URL } = require('./config');
+const experiment = require('./experimenting/habitStrength')
+
+experiment()
 
 const db = knex({
   client: 'pg',
