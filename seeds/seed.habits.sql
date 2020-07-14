@@ -1,4 +1,6 @@
+SET timezone="UTC";
 BEGIN;
+
 
 -- todo: had issue with duplicate key error when inserting into 
 -- habit_records. Need to sort out how setval thing works and 
@@ -53,9 +55,9 @@ SELECT setval('habits_id_seq', (SELECT MAX(id) from "habits"));
 
 INSERT INTO habit_records (id, date_completed, habit_id)
 VALUES 
-(1,'2020-07-03T16:28:32.615',1),
-(2,'2020-07-04T16:28:32.615',1),
-(3,'2020-07-06T16:28:32.615',1);
+(1,'2020-07-03T16:28:32.615Z',1),
+(2,'2020-07-04T16:28:32.615Z',1),
+(3,'2020-07-06T16:28:32.615Z',1);
 
 SELECT setval('habit_records_id_seq', (SELECT MAX(id) from "habit_records"));
 

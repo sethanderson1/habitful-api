@@ -39,9 +39,11 @@ habitRecordsRouter
 
             // res.json(habit_records)
 
-            res.json(habit_records.map(
+            res.json(habit_records
+                .map(
                 HabitRecordsService.serializeHabitRecord
-            ));
+            )
+            );
         } catch (err) {
             next();
         };
