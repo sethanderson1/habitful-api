@@ -1,7 +1,7 @@
 const app = require('./app');
 const knex = require('knex');
 const { PORT, DATABASE_URL } = require('./config');
-const experiment = require('./experimenting/habitStrength')
+const experiment = require('./habitStrength/habitStrength')
 
 experiment()
 
