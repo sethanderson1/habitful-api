@@ -1,33 +1,33 @@
 const app = require('./app');
 const knex = require('knex');
 const { PORT, DATABASE_URL } = require('./config');
-const experiment = require('./habitStrength/habitStrength')
+const experiment = require('./habitStrength/habitStrength');
 
-experiment()
+// experiment()
 
 const db = knex({
   client: 'pg',
   connection: DATABASE_URL,
-  pool: {
-    min: 1,
-    max: 10,
+  // pool: {
+  //   min: 1,
+  //   max: 10,
 
-    afterCreate: function (conn, done) {
-      // in this example we use pg driver's connection API
-      conn.query('SET timezone="UTC";', function (err) {
-        if (err) {
-          // first query failed, return error and don't try to make next query
-          console.log('init err:', err)
-          done(err, conn);
-        } else {
-          console.log('timezone set to UTC')
-          done(null, conn)
+  //   afterCreate: function (conn, done) {
+  //     // in this example we use pg driver's connection API
+  //     conn.query('SET timezone="UTC";', function (err) {
+  //       if (err) {
+  //         // first query failed, return error and don't try to make next query
+  //         console.log('init err:', err)
+  //         done(err, conn);
+  //       } else {
+  //         console.log('timezone set to UTC')
+  //         done(null, conn)
 
-        }
-      });
+  //       }
+  //     });
 
-    }
-  }
+  //   }
+  // }
 });
 
 

@@ -10,24 +10,35 @@ const UsersService = {
     hashPassword(password) {
         return bcrypt.hash(password, 10);
     },
-    insertUser(knex, newUser) {
+    async insertUser(knex, newUser) {
+        console.log('newUser', newUser)
         newUser.email = newUser.email.toLowerCase();
-        console.log('insertUser ran')
-
-        return knex
+        const insertedUser = await knex
             .insert(newUser)
             .into('users')
             .returning('*')
             .then(rows => {
                 return rows[0]
             });
+
+        // const returnedKnexRaw = await knex.raw(
+        //     'show timezone;'
+        // )
+        //     .then(timezone => {
+        //         console.log('timezone', timezone)
+
+        //         return timezone
+        //     })
+        // console.log('returnedKnexRaw', returnedKnexRaw)
+        console.log('insertedUser', insertedUser)
+        return insertedUser
     },
     hasUserWithEmail(knex, email) {
         email = email.toLowerCase();
         console.log('email', email)
         return knex.select('*')
             .from('users')
-            .where({email})
+            .where({ email })
             .first()
             .then(user => !!user);
     },
@@ -47,13 +58,17 @@ const UsersService = {
         };
     },
     serializeUser(user) {
-        return {
+        console.log('user.date_created begin serialize', user.date_created)
+        const sanitized = {
             id: user.id,
             name: xss(user.name),
             email: xss(user.email),
             date_created: user.date_created,
             date_modified: null,
         };
+
+        console.log('user.date_created after serialize', sanitized.date_created)
+        return sanitized
     }
 };
 

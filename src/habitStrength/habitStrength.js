@@ -11,6 +11,8 @@ const habitStrength = () => {
     let prevHabitStrength = 0;
     const checkMarkWeight = 1 / freq; 
 
+    // **** todo: make sure cant divide by zero
+
     const dummyCheckMarkArr = Array(numDays).fill(0).map((checkMarkVal, i, arr) => {
 
         const userCompletionRate = 1; // 1 = 100%

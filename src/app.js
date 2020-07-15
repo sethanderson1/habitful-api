@@ -29,17 +29,17 @@ app.use(`/api/users`, usersRouter);
 app.use(`/api/habits`, habitsRouter);
 app.use(`/api/habit-records`, habitRecordsRouter);
 
-app.get('/', async (req, res) => {
-    const records = await knex
-        // look at the records
-        .from('habit_records')
-        //and join with habits in order to get habit name, etc.
-        .innerJoin('habits', `habit_records.habit_id`, `habits.id`)
-        //filter by record date. and by interval es^pecially
-        // .where('habit_records.date_completed', '2020-07-12 22:52:05')
-        .select(['habits.name', 'habit_records.date_completed']);
-    res.send(JSON.stringify({ records }));
-})
+// app.get('/', async (req, res) => {
+//     const records = await knex
+//         // look at the records
+//         .from('habit_records')
+//         //and join with habits in order to get habit name, etc.
+//         .innerJoin('habits', `habit_records.habit_id`, `habits.id`)
+//         //filter by record date. and by interval es^pecially
+//         // .where('habit_records.date_completed', '2020-07-12 22:52:05')
+//         .select(['habits.name', 'habit_records.date_completed']);
+//     res.send(JSON.stringify({ records }));
+// })
 
 app.use(function errorHandler(error, req, res, next) {
     let response

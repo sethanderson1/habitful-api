@@ -1,2 +1,2 @@
 DROP TABLE IF EXISTS habits;
-DROP TYPE IF EXISTS unit_option;
+DROP TYPE IF EXISTS interval_option;

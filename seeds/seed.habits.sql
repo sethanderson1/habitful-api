@@ -8,8 +8,8 @@ BEGIN;
 
 TRUNCATE
 habit_records,
-habits
--- users
+habits,
+users
 RESTART IDENTITY CASCADE;
 
 INSERT INTO users (id, name, email, password, date_created, date_modified)
@@ -21,7 +21,7 @@ VALUES
 
 SELECT setval('users_id_seq', (SELECT MAX(id) from "users"));
 
-INSERT INTO habits (id, name, description, num_times, time_unit, date_created, date_modified, user_id)
+INSERT INTO habits (id, name, description, num_times, time_interval, date_created, date_modified, user_id)
 VALUES 
 (1,
 'walk for 1 hour',
