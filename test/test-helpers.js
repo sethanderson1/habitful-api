@@ -8,8 +8,7 @@ function makeUsersArray() {
       name: 'testName1',
       email: 'test1@gmail.com',
       password: 'Password1!',
-      date_created: new Date(),
-      date_modified: new Date()
+      date_created: new Date()
       
     },
     {
@@ -17,8 +16,7 @@ function makeUsersArray() {
       name: 'testName2',
       email: 'test2@gmail.com',
       password: 'Password1!',
-      date_created: new Date(),
-      date_modified: new Date()
+      date_created: new Date()
 
     },
     {
@@ -26,8 +24,7 @@ function makeUsersArray() {
       name: 'testName3',
       email: 'test3@gmail.com',
       password: 'Password1!',
-      date_created: new Date(),
-      date_modified: new Date()
+      date_created: new Date()
 
     }
   ]

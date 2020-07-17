@@ -25,7 +25,7 @@ usersRouter
 
             // verify email not taken
             const hasEmail = await UsersService
-                .hasUserWithEmail(knexInstance, email)
+            .hasUserWithEmail(knexInstance, email)
             if (hasEmail) {
                 return res.status(400).json({
                     error: { message: `*Email already in use` }
@@ -58,39 +58,8 @@ usersRouter
             console.log('dateUTC', dateUTC)
 
         
-
-
-
-
-
-
-
-
-
-            // const newDate = new Date()
-            // console.log('newDate', newDate)
-            // const newDateToUtc = dayjs(newDate).utc().format();
-            // console.log('newDateToUtc', newDateToUtc)
-            // const dateUTC = dayjs().utc().format();
-            // console.log('dateUTC', dateUTC)
-
-            // const newUser = {
-            //     name,
-            //     email,
-            //     password: hashedPassword,
-            //     date_created: dateUTC
-            // };
-            // console.log('dateUTC', dateUTC)
-
-        
-
-
-
-
-
-            // const sanitizedUser = await UsersService.serializeUser(newUser);
-            const sanitizedUser = newUser;
-            console.log('sanitizedUser', sanitizedUser)
+            const sanitizedUser = await UsersService.serializeUser(newUser);
+            // const sanitizedUser = newUser;
             const user = await UsersService.insertUser(knexInstance, sanitizedUser);
             console.log('user', user)
             

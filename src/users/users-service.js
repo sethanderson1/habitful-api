@@ -11,26 +11,16 @@ const UsersService = {
         return bcrypt.hash(password, 10);
     },
     async insertUser(knex, newUser) {
-        console.log('newUser', newUser)
         newUser.email = newUser.email.toLowerCase();
         const insertedUser = await knex
             .insert(newUser)
             .into('users')
             .returning('*')
             .then(rows => {
+                console.log('rows', rows)
                 return rows[0]
             });
 
-        // const returnedKnexRaw = await knex.raw(
-        //     'show timezone;'
-        // )
-        //     .then(timezone => {
-        //         console.log('timezone', timezone)
-
-        //         return timezone
-        //     })
-        // console.log('returnedKnexRaw', returnedKnexRaw)
-        console.log('insertedUser', insertedUser)
         return insertedUser
     },
     hasUserWithEmail(knex, email) {
@@ -58,16 +48,12 @@ const UsersService = {
         };
     },
     serializeUser(user) {
-        console.log('user.date_created begin serialize', user.date_created)
         const sanitized = {
-            id: user.id,
             name: xss(user.name),
             email: xss(user.email),
-            date_created: user.date_created,
-            date_modified: null,
+            password: user.password,
+            date_created: xss(user.date_created),
         };
-
-        console.log('user.date_created after serialize', sanitized.date_created)
         return sanitized
     }
 };
