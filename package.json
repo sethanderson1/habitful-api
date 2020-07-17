@@ -9,8 +9,8 @@
     "migrate": "export TZ='UTC'; postgrator --config postgrator-config.js",
     "migrate:test": "export TZ='UTC'; cross-env NODE_ENV=test npm run migrate",
     "migrate:production": "export TZ='UTC'; cross-env SSL=true DATABASE_URL=$(heroku config:get DATABASE_URL) npm run migrate",
-    "seed":"export TZ='UTC'; psql -U dunder_mifflin -d habitful -f ./seeds/seed.habits.sql",
-    "seed:test":"export TZ='UTC'; psql -U dunder_mifflin -d habitful-test -f ./seeds/seed.habits.sql",
+    "seed": "export TZ='UTC'; psql -U dunder_mifflin -d habitful -f ./seeds/seed.habits.sql",
+    "seed:test": "export TZ='UTC'; psql -U dunder_mifflin -d habitful-test -f ./seeds/seed.habits.sql",
     "start": "export TZ='UTC'; node src/server.js",
     "predeploy": "npm audit",
     "deploy": "git push heroku master"
@@ -31,6 +31,7 @@
     "helmet": "^3.22.1",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.21.2",
+    "moment": "^2.27.0",
     "morgan": "^1.10.0",
     "path": "^0.12.7",
     "pg": "^7.12.1",

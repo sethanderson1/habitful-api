@@ -5,7 +5,7 @@ const habitStrength = () => {
     // 100% in 30 days if user completes habits at the 
     // goal frequency
     const timeInterval = 7; // days
-    const timesCompleted = 7; // times per interval 
+    const timesCompleted = 3; // times per interval 
     const freq = timesCompleted / timeInterval;
     const numDays = 500; // length for dummy array (for testing)
     let prevHabitStrength = 0;

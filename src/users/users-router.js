@@ -2,17 +2,19 @@ const path = require('path');
 const express = require('express');
 const UsersService = require('./users-service');
 const dayjs = require('dayjs');
+const moment = require('moment')
 const utc = require('dayjs/plugin/utc');
 dayjs.extend(utc)
 const usersRouter = express.Router();
 const jsonParser = express.json();
-
 usersRouter
     .route('/')
     .post(jsonParser, async (req, res, next) => {
         try {
             const knexInstance = req.app.get('db');
-            const { name, email, password } = req.body;
+            const { name, email, password
+            ,date_created
+            } = req.body;
             for (const field of ['name', 'email', 'password']) {
                 if (!req.body[field]) {
                     return res.status(400).json({
@@ -40,17 +42,51 @@ usersRouter
             // hash password and insert user in database
             const hashedPassword = await UsersService.hashPassword(password);
 
+            const newDate = new Date()
+            console.log('newDate', newDate)
+            const newDateToUtc = dayjs(newDate).utc().format();
+            console.log('newDateToUtc', newDateToUtc)
             const dateUTC = dayjs().utc().format();
-
+            console.log('dateUTC', dateUTC)
+            
             const newUser = {
                 name,
                 email,
                 password: hashedPassword,
-                date_created: dateUTC
+                date_created: date_created
             };
             console.log('dateUTC', dateUTC)
 
         
+
+
+
+
+
+
+
+
+
+            // const newDate = new Date()
+            // console.log('newDate', newDate)
+            // const newDateToUtc = dayjs(newDate).utc().format();
+            // console.log('newDateToUtc', newDateToUtc)
+            // const dateUTC = dayjs().utc().format();
+            // console.log('dateUTC', dateUTC)
+
+            // const newUser = {
+            //     name,
+            //     email,
+            //     password: hashedPassword,
+            //     date_created: dateUTC
+            // };
+            // console.log('dateUTC', dateUTC)
+
+        
+
+
+
+
 
             // const sanitizedUser = await UsersService.serializeUser(newUser);
             const sanitizedUser = newUser;
