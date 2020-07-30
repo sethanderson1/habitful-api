@@ -3,7 +3,7 @@ CREATE TABLE users (
     name varchar(72) NOT NULL,
     email varchar(72) NOT NULL,
     password varchar(72) NOT NULL,
-    date_created TEXT NOT NULL
+    date_created TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
 ALTER TABLE habits

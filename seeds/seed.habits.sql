@@ -43,7 +43,14 @@ null,
 3, 
 'week', 
 '2020-07-01T00:00:00Z',
-1);
+1),
+(4,
+'run 2 miles',
+null, 
+2, 
+'week', 
+'2020-07-01T00:00:00Z',
+2);
 
 -- ensures id generator will start from the max id num in database
 -- instead of starting at 1
@@ -52,9 +59,13 @@ SELECT setval('habits_id_seq', (SELECT MAX(id) from "habits"));
 
 INSERT INTO habit_records (id, date_completed, habit_id)
 VALUES 
-(1,'2020-07-01T11:00:00Z',1),
-(2,'2020-07-04T00:00:00Z',1),
-(3,'2020-07-05T11:00:00Z',1);
+(1,'2020-07-01T00:00:00Z',1),
+(2,'2020-07-25T00:00:00Z',1),
+(3,'2020-07-26T00:00:00Z',1),
+(4,'2020-07-28T00:00:00Z',1),
+(5,'2020-07-29T00:00:00Z',3),
+(6,'2020-07-22T00:00:00Z',4),
+(7,'2020-07-28T00:00:00Z',4);
 
 SELECT setval('habit_records_id_seq', (SELECT MAX(id) from "habit_records"));
 

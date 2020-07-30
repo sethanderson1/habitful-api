@@ -2,14 +2,11 @@ const path = require('path');
 const express = require('express');
 // const HabitsService = require('./habits-service');
 const HabitRecordsService = require('./habit_records-service');
-const habitsRouter = require('../habits/habits-router');
 // const { requireAuth } = require('../middleware/jwt-auth');
 const habitRecordsRouter = express.Router();
 const jsonParser = express.json();
 
 // todo: uncomment const id = 1 when put in requireAuth
-
-
 // paths needed:
 
 // route(/)
@@ -24,26 +21,25 @@ const jsonParser = express.json();
 // delete single habit record
 // patch single habit record ??
 
-
 habitRecordsRouter
     .route('/')
     // .all(requireAuth)
     .get(async (req, res, next) => {
 
-        // THIS GETS ALL HABITS FROM A GIVEN USER
+        // THIS GETS ALL HABIT records FROM A GIVEN USER
         const user_id = 1
         const db = req.app.get('db');
         try {
             const habit_records = await HabitRecordsService
                 .getAllHabitRecordsByUser(db, user_id)
 
-            // res.json(habit_records)
+            res.json(habit_records)
 
-            res.json(habit_records
-                .map(
-                HabitRecordsService.serializeHabitRecord
-            )
-            );
+            // res.json(habit_records
+            //     .map(
+            //         HabitRecordsService.serializeHabitRecord
+            //     )
+            // );
         } catch (err) {
             next();
         };
@@ -119,15 +115,17 @@ habitRecordsRouter
             .catch(next);
     })
     .get((req, res, next) => {
-        res.status(200).json(res.habit_records.map(
-            HabitRecordsService.serializeHabitRecord
-        ))
+        res.status(200).json(res.habit_records
+        //     .map(
+        //     HabitRecordsService.serializeHabitRecord
+        // )
+        )
     });
 
 habitRecordsRouter
-// .route('/:habit_id/:habit_records_id')
-.route('/record/:habit_records_id')
-// .all(requireAuth)
+    // .route('/:habit_id/:habit_records_id')
+    .route('/record/:habit_records_id')
+    // .all(requireAuth)
     .all((req, res, next) => {
         HabitRecordsService.getById(
             req.app.get('db'),
