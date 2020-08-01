@@ -156,6 +156,8 @@ habitRecordsRouter
     .route('/record/:habit_records_id')
     // .all(requireAuth)
     .all((req, res, next) => {
+        console.log('.all reached')
+
         HabitRecordsService.getById(
             req.app.get('db'),
             req.params.habit_records_id
@@ -189,6 +191,7 @@ habitRecordsRouter
             .serializeHabitRecord(res.habit_record))
     })
     .delete((req, res, next) => {
+        console.log('delete path reached')
         const { habit_records_id } = req.params;
         const id = habit_records_id;
         HabitRecordsService.deleteHabitRecord(

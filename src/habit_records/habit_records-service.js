@@ -7,17 +7,13 @@ const HabitRecordsService = {
     async getAllHabitRecordsByUser(knex, user_id) {
 
         const returnedHabitRecords = await knex
-        .select('habit_id','habit_records.id','date_completed')
-        .from('habit_records')
-        //and join with habits in order to get habit name, etc.
-        .innerJoin('habits', `habit_records.habit_id`, `habits.id`)
-        // filter by record date. and by interval es^pecially
-        // .where('habit_records.date_completed', '2020-07-12 22:52:05')
-        // .select(['habits.name', 'habit_records.date_completed'])
-        .where({ user_id });
+            .select('habit_id', 'habit_records.id', 'date_completed')
+            .from('habit_records')
+            .innerJoin('habits', `habit_records.habit_id`, `habits.id`)
+            .where({ user_id });
 
-        
-        console.log('returnedHabitRecords', returnedHabitRecords)
+
+        // console.log('returnedHabitRecords', returnedHabitRecords)
         return returnedHabitRecords
     },
 
@@ -49,7 +45,7 @@ const HabitRecordsService = {
         return knex
             .select('*')
             .from('habit_records')
-            .where({habit_id})
+            .where({ habit_id })
     },
 
     getById(knex, id) {
@@ -62,8 +58,9 @@ const HabitRecordsService = {
 
 
     deleteHabitRecord(knex, id) {
+        console.log('deleteHabitRecord reached')
         return knex('habit_records')
-            .where({id})
+            .where({ id })
             .delete();
     },
 
