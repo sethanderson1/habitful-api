@@ -5,27 +5,15 @@ dayjs.extend(utc)
 
 const HabitRecordsService = {
     async getAllHabitRecordsByUser(knex, user_id) {
-
         const returnedHabitRecords = await knex
             .select('habit_id', 'habit_records.id', 'date_completed')
             .from('habit_records')
             .innerJoin('habits', `habit_records.habit_id`, `habits.id`)
             .where({ user_id });
-
-
-        // console.log('returnedHabitRecords', returnedHabitRecords)
         return returnedHabitRecords
     },
 
-    // getAllHabitRecordsByHabitId(knex, habit_id) {
-    //     console.log()
-    //     return knex.select('*')
-    //         .from('habit_records')
-    //         .where({ habit_id });
-    // },
-
     insertHabitRecord(knex, newHabitRecord) {
-        // converts habit record to UTC
         newHabitRecord.date_completed = dayjs(
             newHabitRecord.date_completed
         )
@@ -56,7 +44,6 @@ const HabitRecordsService = {
             .first();
     },
 
-
     deleteHabitRecord(knex, id) {
         console.log('deleteHabitRecord reached')
         return knex('habit_records')
@@ -64,11 +51,11 @@ const HabitRecordsService = {
             .delete();
     },
 
-    updateHabitRecord(knex, id, newHabitRecordField) {
-        return knex('habit_records')
-            .where({ id })
-            .update(newHabitRecordField);
-    },
+    // updateHabitRecord(knex, id, updatedHabitdRecord) {
+    //     return knex('habit_records')
+    //         .where({ id })
+    //         .update(updatedHabitdRecord);
+    // },
 
     serializeHabitRecord(habit_records) {
         // WITH UTC CONVERSION
@@ -80,21 +67,12 @@ const HabitRecordsService = {
         )
             .utc()
             .format();
-        // console.log('after dayjs', date_completed)
 
         return {
             id: habit_records.id,
             date_completed,
             habit_id: habit_records.habit_id
         };
-
-
-        // // WITHOUT UTC CONVERSION
-        // return {
-        //     id: habit_records.id,
-        //     date_completed:  xss(habit_records.date_completed),
-        //     habit_id: habit_records.habit_id
-        // };
     }
 };
 

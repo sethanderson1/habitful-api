@@ -78,7 +78,8 @@ habitRecordsRouter
                 res.status(201)
                     .location(path.posix.join(
                         req.originalUrl, `/${habitRecord.id}`))
-                    .json(HabitRecordsService.serializeHabitRecord(habitRecord))
+                    .json(HabitRecordsService
+                        .serializeHabitRecord(habitRecord))
             })
             .catch(next);
     });
@@ -86,37 +87,37 @@ habitRecordsRouter
 habitRecordsRouter
     .route('/:habit_id')
     // .all(requireAuth)
-    // .all((req, res, next) => {
-    //     // *** uncomment when i add authrouter
-    //     // const { id } = req.user
-    //     const id = 1;
-    //     const { habit_id } = req.params;
-    //     const db = req.app.get('db');
-    //     HabitRecordsService.getHabitRecordsByHabitId(
-    //         db,
-    //         habit_id
-    //     )
-    //         .then(habit_records => {
-    //             if (!habit_records) {
-    //                 return res
-    //                     .status(404)
-    //                     .json({
-    //                         error: {
-    //                             message: `Habit doesn't exist`
-    //                         }
-    //                     })
-    //             };
-    //             // todo: do i need a condition for when 
-    //             // user tries to manually type in a number in
-    //             // the URL for habit_id that they dont own, 
-    //             // or will the auth middleware take care of that
-    //             // i forgot... think auth takes care of it...
+    .all((req, res, next) => {
+        // *** uncomment when i add authrouter
+        // const { id } = req.user
+        const id = 1;
+        const { habit_id } = req.params;
+        const db = req.app.get('db');
+        HabitRecordsService.getHabitRecordsByHabitId(
+            db,
+            habit_id
+        )
+            .then(habit_records => {
+                if (!habit_records) {
+                    return res
+                        .status(404)
+                        .json({
+                            error: {
+                                message: `Habit doesn't exist`
+                            }
+                        })
+                };
+                // todo: do i need a condition for when 
+                // user tries to manually type in a number in
+                // the URL for habit_id that they dont own, 
+                // or will the auth middleware take care of that
+                // i forgot... think auth takes care of it...
 
-    //             res.habit_records = habit_records;
-    //             next();
-    //         })
-    //         .catch(next);
-    // })
+                res.habit_records = habit_records;
+                next();
+            })
+            .catch(next);
+    })
     .get((req, res, next) => {
         // *** uncomment when i add authrouter
         // const { id } = req.user
@@ -187,8 +188,7 @@ habitRecordsRouter
             .catch(next);
     })
     .get((req, res, next) => {
-        res.status(200).json(HabitRecordsService
-            .serializeHabitRecord(res.habit_record))
+        res.status(200).json(res.habit_record);
     })
     .delete((req, res, next) => {
         console.log('delete path reached')
@@ -204,31 +204,9 @@ habitRecordsRouter
             .catch(next)
     })
 
-
 module.exports = habitRecordsRouter
 
 
-
-
-
-
-
-
-
-
-
-
-
-//     .delete((req, res, next) => {
-//         HabitRecordsService.deleteHabit(
-//             req.app.get('db'),
-//             req.params.habit_id
-//         )
-//             .then(numRowsAffected => {
-//                 res.status(204).end()
-//             })
-//             .catch(next)
-//     })
 //     .patch(jsonParser, (req, res, next) => {
 //         const { name, description, num_times, time_unit }
 //             = req.body;

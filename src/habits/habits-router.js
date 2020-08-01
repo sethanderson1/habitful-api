@@ -26,13 +26,19 @@ habitsRouter
     .post(jsonParser, (req, res, next) => {
         // *** uncomment when i add authrouter
         // const { id } = req.user
+        console.log('req.body', req.body)
         const id = 1
         req.body.user_id = id;
-        const { name, description, num_times, time_unit, user_id }
+        // todo: have date_created come from client
+        const description = ''
+        // const num_times= 1
+        const { name, num_times, time_interval, user_id }
             = req.body;
+            
         const newHabit = {
-            name, description, num_times, time_unit, user_id
+            name, description, num_times, time_interval, user_id
         };
+        console.log('newHabit', newHabit)
         const db = req.app.get('db');
 
         for (const [key, value] of Object.entries(newHabit)) {
@@ -107,10 +113,10 @@ habitsRouter
             .catch(next)
     })
     .patch(jsonParser, (req, res, next) => {
-        const { name, description, num_times, time_unit }
+        const { name, description, num_times, time_interval }
             = req.body;
         const habitToUpdate = {
-            name, description, num_times, time_unit
+            name, description, num_times, time_interval
         }
         const db = req.app.get('db');
 

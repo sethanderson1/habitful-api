@@ -37,12 +37,13 @@ const HabitsService = {
             .update(newHabitFields);
     },
 
+    // todo: might add date_created here
     serializeHabit(habit) {
         return {
             id: habit.id,
             name: xss(habit.name),
             description: xss(habit.description),
-            num_times: habit.num_times,
+            num_times: xss(habit.num_times),
             time_unit: xss(habit.time_unit)
         };
     }
