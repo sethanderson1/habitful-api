@@ -4,18 +4,21 @@ const utc = require('dayjs/plugin/utc')
 dayjs.extend(utc)
 
 const HabitRecordsService = {
-    getAllHabitRecordsByUser(knex, user_id) {
-        console.log()
-        return knex
-            // todo: figure out if select * or more narrow
-            .select('*')
-            .from('habit_records')
-            //and join with habits in order to get habit name, etc.
-            .innerJoin('habits', `habit_records.habit_id`, `habits.id`)
-            // filter by record date. and by interval es^pecially
-            // .where('habit_records.date_completed', '2020-07-12 22:52:05')
-            // .select(['habits.name', 'habit_records.date_completed'])
-            .where({ user_id });
+    async getAllHabitRecordsByUser(knex, user_id) {
+
+        const returnedHabitRecords = await knex
+        .select('habit_id','habit_records.id','date_completed')
+        .from('habit_records')
+        //and join with habits in order to get habit name, etc.
+        .innerJoin('habits', `habit_records.habit_id`, `habits.id`)
+        // filter by record date. and by interval es^pecially
+        // .where('habit_records.date_completed', '2020-07-12 22:52:05')
+        // .select(['habits.name', 'habit_records.date_completed'])
+        .where({ user_id });
+
+        
+        console.log('returnedHabitRecords', returnedHabitRecords)
+        return returnedHabitRecords
     },
 
     // getAllHabitRecordsByHabitId(knex, habit_id) {
