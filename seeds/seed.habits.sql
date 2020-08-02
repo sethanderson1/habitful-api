@@ -26,15 +26,15 @@ VALUES
 (1,
 'walk for 1 hour',
 null, 
-1, 
-'day', 
+7, 
+'week', 
 '2020-06-30T11:00:00Z',
 1),
 (2,
 'meditate 15 min',
 null, 
-1, 
-'day', 
+7, 
+'week', 
 '2020-07-01T00:00:00Z',
 1),
 (3,
@@ -59,7 +59,7 @@ SELECT setval('habits_id_seq', (SELECT MAX(id) from "habits"));
 
 INSERT INTO habit_records (id, date_completed, habit_id)
 VALUES 
-(1, '2020-07-30T07:00:00Z', 2),
+    (1, '2020-07-30T07:00:00Z', 2),
     (2, '2020-07-29T07:00:00Z', 2),
     (3, '2020-07-28T07:00:00Z', 2),
     (4, '2020-07-27T07:00:00Z', 2),
