@@ -16,8 +16,11 @@ habitsRouter
         const id = 1
         const db = req.app.get('db');
         try {
+
+            console.log('try get')
             const habits = await HabitsService
                 .getAllHabits(db, id)
+            console.log('habits', habits)
             res.json(habits.map(HabitsService.serializeHabit));
         } catch (err) {
             next();
@@ -29,14 +32,14 @@ habitsRouter
         console.log('req.body', req.body)
         const id = 1
         req.body.user_id = id;
-        // todo: have date_created come from client
-        const description = ''
+        // const description = ''
         // const num_times= 1
-        const { name, num_times, time_interval, user_id }
-            = req.body;
-            
+        const { name, description, num_times,
+            time_interval, date_created, user_id } = req.body;
+
         const newHabit = {
-            name, description, num_times, time_interval, user_id
+            name, description, num_times,
+            time_interval, date_created, user_id
         };
         console.log('newHabit', newHabit)
         const db = req.app.get('db');
@@ -100,7 +103,8 @@ habitsRouter
             .catch(next);
     })
     .get((req, res, next) => {
-        res.status(200).json(HabitsService.serializeHabit(res.habit));
+        res.status(200).json(HabitsService
+            .serializeHabit(res.habit));
     })
     .delete((req, res, next) => {
         HabitsService.deleteHabit(

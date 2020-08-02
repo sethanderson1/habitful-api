@@ -2,12 +2,15 @@ const xss = require('xss');
 
 const HabitsService = {
     getAllHabits(knex, user_id) {
-        return knex.select('*')
+        return knex
+            .select('*')
             .from('habits')
-            .where({ user_id });
+            .where({ user_id })
+            .orderBy('id','asc');
     },
 
     insertHabit(knex, newHabit) {
+        console.log('insertHabit ran')
         return knex
             .insert(newHabit)
             .into('habits')
@@ -44,7 +47,8 @@ const HabitsService = {
             name: xss(habit.name),
             description: xss(habit.description),
             num_times: xss(habit.num_times),
-            time_unit: xss(habit.time_unit)
+            time_interval: xss(habit.time_interval),
+            date_created: habit.date_created
         };
     }
 };
