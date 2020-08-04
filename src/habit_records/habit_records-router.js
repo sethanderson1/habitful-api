@@ -2,9 +2,11 @@ const path = require('path');
 const express = require('express');
 // const HabitsService = require('./habits-service');
 const HabitRecordsService = require('./habit_records-service');
+const HabitsService = require('../habits/habits-service');
 // const { requireAuth } = require('../middleware/jwt-auth');
 const habitRecordsRouter = express.Router();
 const jsonParser = express.json();
+
 
 // todo: uncomment const id = 1 when put in requireAuth
 // paths needed:
@@ -87,37 +89,37 @@ habitRecordsRouter
 habitRecordsRouter
     .route('/:habit_id')
     // .all(requireAuth)
-    .all((req, res, next) => {
-        // *** uncomment when i add authrouter
-        // const { id } = req.user
-        const id = 1;
-        const { habit_id } = req.params;
-        const db = req.app.get('db');
-        HabitRecordsService.getHabitRecordsByHabitId(
-            db,
-            habit_id
-        )
-            .then(habit_records => {
-                if (!habit_records) {
-                    return res
-                        .status(404)
-                        .json({
-                            error: {
-                                message: `Habit doesn't exist`
-                            }
-                        })
-                };
-                // todo: do i need a condition for when 
-                // user tries to manually type in a number in
-                // the URL for habit_id that they dont own, 
-                // or will the auth middleware take care of that
-                // i forgot... think auth takes care of it...
+    // .all((req, res, next) => {
+    //     // *** uncomment when i add authrouter
+    //     // const { id } = req.user
+    //     const id = 1;
+    //     const { habit_id } = req.params;
+    //     const db = req.app.get('db');
+    //     HabitRecordsService.getHabitRecordsByHabitId(
+    //         db,
+    //         habit_id
+    //     )
+    //         .then(habit_records => {
+    //             if (!habit_records) {
+    //                 return res
+    //                     .status(404)
+    //                     .json({
+    //                         error: {
+    //                             message: `Habit doesn't exist`
+    //                         }
+    //                     })
+    //             };
+    //             // todo: do i need a condition for when 
+    //             // user tries to manually type in a number in
+    //             // the URL for habit_id that they dont own, 
+    //             // or will the auth middleware take care of that
+    //             // i forgot... think auth takes care of it...
 
-                res.habit_records = habit_records;
-                next();
-            })
-            .catch(next);
-    })
+    //             res.habit_records = habit_records;
+    //             next();
+    //         })
+    //         .catch(next);
+    // })
     .get((req, res, next) => {
         // *** uncomment when i add authrouter
         // const { id } = req.user
@@ -139,6 +141,7 @@ habitRecordsRouter
                         })
                 };
 
+                console.log('habit_records', habit_records)
                 res.habit_records = habit_records;
                 res.status(200).json(res.habit_records);
             })
@@ -156,15 +159,48 @@ habitRecordsRouter
     // .route('/:habit_id/:habit_records_id')
     .route('/record/:habit_records_id')
     // .all(requireAuth)
-    .all((req, res, next) => {
-        console.log('.all reached')
+    // .all((req, res, next) => {
+    //     console.log('.all reached')
 
-        HabitRecordsService.getById(
+    //     HabitsService.getById(
+    //         req.app.get('db'),
+    //         req.params.habit_records_id
+    //     )
+    //         .then(habit_record => {
+    //             console.log('habit_record', habit_record)
+    //             if (!habit_record) {
+    //                 return res
+    //                     .status(404)
+    //                     .json({
+    //                         error: {
+    //                             message: `Habit record doesn't exist`
+    //                         }
+    //                     })
+    //             }
+    //             // if (habit_record.author_id !== id) {
+    //             //     // console.log('Forbidden path')
+    //             //     return res.status(403)
+    //             //         .json({
+    //             //             error: {
+    //             //                 message: `Forbidden`
+    //             //             }
+    //             //         });
+    //             // };
+    //             console.log('habit_record', habit_record)
+    //             res.habit_record = habit_record;
+    //             next();
+    //         })
+    //         .catch(next);
+    // })
+    .get((req, res, next) => {
+
+
+        HabitRecordsService.getHabitRecordsByHabitId(
             req.app.get('db'),
             req.params.habit_records_id
         )
-            .then(habit_record => {
-                if (!habit_record) {
+            .then(habit_records => {
+                if (!habit_records) {
                     return res
                         .status(404)
                         .json({
@@ -172,23 +208,15 @@ habitRecordsRouter
                                 message: `Habit record doesn't exist`
                             }
                         })
+
                 }
-                // if (habit_record.author_id !== id) {
-                //     // console.log('Forbidden path')
-                //     return res.status(403)
-                //         .json({
-                //             error: {
-                //                 message: `Forbidden`
-                //             }
-                //         });
-                // };
-                res.habit_record = habit_record;
-                next();
+                console.log('habit_records', habit_records)
+                res.habit_records = habit_records;
+                res.status(200).json(res.habit_records);
             })
             .catch(next);
-    })
-    .get((req, res, next) => {
-        res.status(200).json(res.habit_record);
+
+
     })
     .delete((req, res, next) => {
         console.log('delete path reached')

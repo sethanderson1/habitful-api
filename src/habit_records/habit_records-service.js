@@ -30,6 +30,7 @@ const HabitRecordsService = {
     },
 
     getHabitRecordsByHabitId(knex, habit_id) {
+        console.log('habit_id', habit_id)
         return knex
             .select('*')
             .from('habit_records')
