@@ -69,17 +69,13 @@ describe('Users Endpoints', () => {
                 })
         })
 
-        it(`responds with correct UTC time for date_created`, () => {
-
-        })
-
-
         context('Happy path', () => {
-            it.only(`responds 201, serialized user, storing bcrypted password`, () => {
+            it(`responds 201, serialized user, storing bcrypted password`, () => {
+                const randNum = Math.floor(Math.random() * 1000);
                 const newUser = {
-                    name: 'testName1',
-                    email: 'testuser1@gmail.com',
+                    email: `testuser${randNum}@gmail.com`,
                     password: 'Password1!',
+                    date_created: dayjs().utc().format()
                 };
 
                 return supertest(app)
@@ -88,27 +84,23 @@ describe('Users Endpoints', () => {
                     .expect(201)
                     .expect(res => {
                         expect(res.body).to.have.property('id');
-                        expect(res.body).to.not.have.property('password');
                         expect(res.body.email).to.eql(newUser.email);
                         expect(res.headers.location).to.eql(`/api/users/${res.body.id}`);
                     })
-                // .expect(res =>
-                //     db
-                //         .from('users')
-                //         .select('*')
-                //         .where({ id: res.body.id })
-                //         .first()
-                //         .then(row => {
-                //             expect(row.email).to.eql(newUser.email);
-                //             const expectedDate = new Date().toLocaleString('en', { timeZone: 'UTC' });
-                //             const actualDate = new Date(row.date_created).toLocaleString('en', { timeZone: 'UTC' });
-                //             expect(actualDate).to.eql(expectedDate);
-                //             return bcrypt.compare(newUser.password, row.password);
-                //         })
-                //         .then(compareMatch => {
-                //             expect(compareMatch).to.be.true;
-                //         })
-                // );
+                    .expect(res =>
+                        db
+                            .from('users')
+                            .select('*')
+                            .where({ id: res.body.id })
+                            .first()
+                            .then(row => {
+                                expect(row.email).to.eql(newUser.email);
+                                return bcrypt.compare(newUser.password, row.password);
+                            })
+                            .then(compareMatch => {
+                                expect(compareMatch).to.be.true;
+                            })
+                    );
             });
             it(`responds with a UTC date for date_created`, () => {
                 const randNum = Math.floor(Math.random() * 1000);
@@ -122,11 +114,8 @@ describe('Users Endpoints', () => {
                     .send(newUser)
                     .expect(201)
                     .expect(res => {
-                        // expect date in db to be in UTC
                         const expectedDate = dayjs().utc().format();
-                        const actualDate = res.body.date_created;
-                        console.log('expectedDate', expectedDate)
-                        console.log('date from db', actualDate)
+                        const actualDate = dayjs(res.body.date_created).utc().format();
                         expect(actualDate).to.eql(expectedDate);
                     })
             })
