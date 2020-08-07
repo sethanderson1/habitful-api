@@ -12,12 +12,12 @@ habits,
 users
 RESTART IDENTITY CASCADE;
 
-INSERT INTO users (id, name, email, password, date_created)
+INSERT INTO users (id, email, password, date_created)
 VALUES 
 -- all passwords are 'Password1!'
-(1,'John', 'user1@gmail.com', '$2a$10$do9aqSHBEOX2mmidBFxxPOdknoul45m.TDoeQkdumVNrEkF2sn3KK', '2019-12-31T11:00:00Z'),
-(2,'Mary', 'user2@gmail.com', '$2a$10$4AGfWWmypn45VHgsdyMOY.xymoQInQIwtzbFWeyvUvWVknpeSWwki', '2020-01-01T00:00:00Z'),
-(3,'Bob', 'user3@gmail.com', '$2a$10$XrZZWlImZXIhAIf7b.8xqeDNK6kDU81An9lU.XzsuvgtR7hyG43fm', '2020-01-01T00:00:00Z');
+(1, 'user1@gmail.com', '$2a$10$do9aqSHBEOX2mmidBFxxPOdknoul45m.TDoeQkdumVNrEkF2sn3KK', '2019-12-31T11:00:00Z'),
+(2, 'user2@gmail.com', '$2a$10$4AGfWWmypn45VHgsdyMOY.xymoQInQIwtzbFWeyvUvWVknpeSWwki', '2020-01-01T00:00:00Z'),
+(3, 'user3@gmail.com', '$2a$10$XrZZWlImZXIhAIf7b.8xqeDNK6kDU81An9lU.XzsuvgtR7hyG43fm', '2020-01-01T00:00:00Z');
 
 SELECT setval('users_id_seq', (SELECT MAX(id) from "users"));
 

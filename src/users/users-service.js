@@ -49,7 +49,6 @@ const UsersService = {
     },
     serializeUser(user) {
         const sanitized = {
-            name: xss(user.name),
             email: xss(user.email),
             password: user.password,
             date_created: xss(user.date_created),

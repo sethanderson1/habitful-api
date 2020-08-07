@@ -9,7 +9,7 @@ module.exports = {
     ? process.env.CLIENT_ORIGIN
     : 3000,
   // // CLIENT_ORIGIN: process.env.CLIENT_ORIGIN || 3000,
-  // ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET || 'secret',
-  // REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || 'refresh-secret',
-  // JWT_EXPIRY: process.env.JWT_EXPIRY || '1h'
+  ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET || 'secret',
+  REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || 'refresh-secret',
+  JWT_EXPIRY: process.env.JWT_EXPIRY || '1h'
 };

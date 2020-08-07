@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
 const HabitsService = require('./habits-service');
-// const { requireAuth } = require('../middleware/jwt-auth');
+const { requireAuth } = require('../middleware/jwt-auth');
 const habitsRouter = express.Router();
 const jsonParser = express.json();
 
@@ -9,12 +9,12 @@ const jsonParser = express.json();
 
 habitsRouter
     .route('/')
-    // .all(requireAuth)
+    .all(requireAuth)
     .get(async (req, res, next) => {
-        // *** uncomment when i add authrouter
-        // const { id } = req.user
-        const id = 1
+        const { id } = req.user
+        // const id = 1
         const db = req.app.get('db');
+        console.log('get route habits reached')
         try {
 
             console.log('try get')
@@ -27,13 +27,10 @@ habitsRouter
         };
     })
     .post(jsonParser, (req, res, next) => {
-        // *** uncomment when i add authrouter
-        // const { id } = req.user
+        const { id } = req.user
         console.log('req.body', req.body)
-        const id = 1
+        // const id = 1
         req.body.user_id = id;
-        // const description = ''
-        // const num_times= 1
         const { name, description, num_times,
             time_interval, date_created, user_id } = req.body;
 
@@ -68,11 +65,11 @@ habitsRouter
 
 habitsRouter
     .route('/:habit_id')
-    // .all(requireAuth)
+    .all(requireAuth)
     .all((req, res, next) => {
-        // *** uncomment when i add authrouter
-        // const { id } = req.user
-        const id = 1;
+        const { id } = req.user;
+        console.log('id', id)
+        // const id = 1;
         const { habit_id } = req.params;
         const db = req.app.get('db');
         HabitsService.getById(
@@ -145,4 +142,4 @@ habitsRouter
             .catch(next);
     });
 
-module.exports = habitsRouter
+module.exports = habitsRouter;

@@ -10,12 +10,13 @@ const jsonParser = express.json();
 usersRouter
     .route('/')
     .post(jsonParser, async (req, res, next) => {
+        console.log('post user ran')
         try {
             const knexInstance = req.app.get('db');
-            const { name, email, password
-            ,date_created
+            const { email, password
+                , date_created
             } = req.body;
-            for (const field of ['name', 'email', 'password']) {
+            for (const field of ['email', 'password']) {
                 if (!req.body[field]) {
                     return res.status(400).json({
                         error: { message: `Missing '${field}' in request body` }
@@ -25,7 +26,7 @@ usersRouter
 
             // verify email not taken
             const hasEmail = await UsersService
-            .hasUserWithEmail(knexInstance, email)
+                .hasUserWithEmail(knexInstance, email)
             if (hasEmail) {
                 return res.status(400).json({
                     error: { message: `*Email already in use` }
@@ -48,22 +49,21 @@ usersRouter
             console.log('newDateToUtc', newDateToUtc)
             const dateUTC = dayjs().utc().format();
             console.log('dateUTC', dateUTC)
-            
+
             const newUser = {
-                name,
                 email,
                 password: hashedPassword,
                 date_created: date_created
             };
             console.log('dateUTC', dateUTC)
 
-        
+
             const sanitizedUser = await UsersService.serializeUser(newUser);
             // const sanitizedUser = newUser;
             const user = await UsersService.insertUser(knexInstance, sanitizedUser);
             console.log('user', user)
-            
-            
+
+
             // const ensureUTC = await dayjs(user.date_created).utc().format
             // console.log('ensureUTC', ensureUTC)
             console.log('user.date_created', user.date_created)

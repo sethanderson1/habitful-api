@@ -3,10 +3,10 @@ const express = require('express');
 // const HabitsService = require('./habits-service');
 const HabitRecordsService = require('./habit_records-service');
 const HabitsService = require('../habits/habits-service');
+const { requireAuth } = require('../middleware/jwt-auth');
 // const { requireAuth } = require('../middleware/jwt-auth');
 const habitRecordsRouter = express.Router();
 const jsonParser = express.json();
-
 
 // todo: uncomment const id = 1 when put in requireAuth
 // paths needed:
@@ -25,16 +25,18 @@ const jsonParser = express.json();
 
 habitRecordsRouter
     .route('/')
-    // .all(requireAuth)
+    .all(requireAuth)
     .get(async (req, res, next) => {
         console.log('got to habit_records-router get')
 
         // THIS GETS ALL HABIT records FROM A GIVEN USER
-        const user_id = 1
+        const { id } = req.user
+        console.log('req.user', req.user)
+        // req.body.user_id = id;
         const db = req.app.get('db');
         try {
             const habit_records = await HabitRecordsService
-                .getAllHabitRecordsByUser(db, user_id)
+                .getAllHabitRecordsByUser(db, id)
 
             res.json(habit_records)
 
@@ -56,11 +58,10 @@ habitRecordsRouter
 
     })
     .post(jsonParser, (req, res, next) => {
-        // *** uncomment when i add authrouter
         // const { id } = req.user
-        const id = 1
-        req.body.user_id = id;
+        // req.body.user_id = id;
         const { date_completed, habit_id } = req.body;
+        console.log('req.body', req.body)
         // console.log('date_completed in router', date_completed)
         const newHabitRecord = { date_completed, habit_id };
         const db = req.app.get('db');
@@ -88,7 +89,7 @@ habitRecordsRouter
 
 habitRecordsRouter
     .route('/:habit_id')
-    // .all(requireAuth)
+    .all(requireAuth)
     // .all((req, res, next) => {
     //     // *** uncomment when i add authrouter
     //     // const { id } = req.user
@@ -158,7 +159,7 @@ habitRecordsRouter
 habitRecordsRouter
     // .route('/:habit_id/:habit_records_id')
     .route('/record/:habit_records_id')
-    // .all(requireAuth)
+    .all(requireAuth)
     // .all((req, res, next) => {
     //     console.log('.all reached')
 
@@ -208,9 +209,7 @@ habitRecordsRouter
                                 message: `Habit record doesn't exist`
                             }
                         })
-
                 }
-                console.log('habit_records', habit_records)
                 res.habit_records = habit_records;
                 res.status(200).json(res.habit_records);
             })
@@ -219,7 +218,6 @@ habitRecordsRouter
 
     })
     .delete((req, res, next) => {
-        console.log('delete path reached')
         const { habit_records_id } = req.params;
         const id = habit_records_id;
         HabitRecordsService.deleteHabitRecord(
@@ -227,40 +225,9 @@ habitRecordsRouter
             id
         )
             .then(numRowsAffected => {
-                res.status(204).end()
+                res.status(204).end();
             })
             .catch(next)
     })
 
-module.exports = habitRecordsRouter
-
-
-//     .patch(jsonParser, (req, res, next) => {
-//         const { name, description, num_times, time_unit }
-//             = req.body;
-//         const habitToUpdate = {
-//             name, description, num_times, time_unit
-//         }
-//         const db = req.app.get('db');
-
-//         for (const [key, value] of Object.entries(habitToUpdate)) {
-//             if (value == null && key !== 'description') {
-//                 return res.status(400).json({
-//                     error: {
-//                         message: `Missing '${key}' in request body`
-//                     }
-//                 });
-//             };
-//         };
-
-//         HabitRecordsService.updateHabit(
-//             db,
-//             req.params.habit_id,
-//             habitToUpdate
-//         )
-//             .then(numRowsAffected => {
-//                 res.status(204).end();
-//             })
-//             .catch(next);
-    // }
-
+module.exports = habitRecordsRouter;

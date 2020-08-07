@@ -11,6 +11,7 @@ const usersRouter = require('./users/users-router');
 // const authRouter = require('./auth/auth-router');
 const habitsRouter = require('./habits/habits-router');
 const habitRecordsRouter = require('./habit_records/habit_records-router');
+const authRouter = require('./auth/auth-router');
 
 const app = express();
 
@@ -18,7 +19,7 @@ const morganOption = (NODE_ENV === 'production')
     ? 'tiny'
     : 'common';
 app.use(morgan(morganOption));
-app.use(helmet());
+app.use(helmet());  
 app.use(
     cors({
         origin: CLIENT_ORIGIN
@@ -28,6 +29,7 @@ console.log('reaching app.js')
 app.use(`/api/users`, usersRouter);
 app.use(`/api/habits`, habitsRouter);
 app.use(`/api/habit-records`, habitRecordsRouter);
+app.use(`/api/auth`, authRouter);
 
 // app.get('/', async (req, res) => {
 //     const records = await knex

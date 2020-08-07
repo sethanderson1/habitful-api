@@ -46,7 +46,6 @@ const HabitRecordsService = {
     },
 
     deleteHabitRecord(knex, id) {
-        console.log('deleteHabitRecord reached')
         return knex('habit_records')
             .where({ id })
             .delete();

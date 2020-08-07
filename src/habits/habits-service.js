@@ -2,6 +2,7 @@ const xss = require('xss');
 
 const HabitsService = {
     getAllHabits(knex, user_id) {
+        console.log('user_id', user_id)
         return knex
             .select('*')
             .from('habits')
