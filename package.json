@@ -10,7 +10,7 @@
     "migrate:test": "export TZ='UTC'; cross-env NODE_ENV=test npm run migrate",
     "migrate:production": "export TZ='UTC'; cross-env SSL=true DATABASE_URL=$(heroku config:get DATABASE_URL) npm run migrate",
     "seed": "export TZ='UTC'; npm run migrate 0; npm run migrate; psql -U dunder_mifflin -d habitful -f ./seeds/seed.habits.sql",
-    "seed:test": "export TZ='UTC'; psql -U dunder_mifflin -d habitful-test -f ./seeds/seed.habits.sql",
+    "seed:test": "export TZ='UTC'; npm run migrate 0; npm run migrate; psql -U dunder_mifflin -d habitful-test -f ./seeds/seed.habits.sql",
     "start": "export TZ='UTC'; node src/server.js",
     "predeploy": "npm audit",
     "deploy": "git push heroku master"

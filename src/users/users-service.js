@@ -12,12 +12,13 @@ const UsersService = {
     },
     async insertUser(knex, newUser) {
         newUser.email = newUser.email.toLowerCase();
+        console.log('newUser.email', newUser.email)
         const insertedUser = await knex
             .insert(newUser)
             .into('users')
             .returning('*')
             .then(rows => {
-                console.log('rows', rows)
+                // console.log('rows', rows)
                 return rows[0]
             });
 
@@ -25,7 +26,6 @@ const UsersService = {
     },
     hasUserWithEmail(knex, email) {
         email = email.toLowerCase();
-        console.log('email', email)
         return knex.select('*')
             .from('users')
             .where({ email })
@@ -33,7 +33,6 @@ const UsersService = {
             .then(user => !!user);
     },
     validatePassword(password) {
-        console.log('password', password)
         if (password.length < 8) {
             return 'Password must be longer than 8 characters';
         };

@@ -1,31 +1,28 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const dayjs = require('dayjs');
+const utc = require('dayjs/plugin/utc');
+dayjs.extend(utc);
 
 function makeUsersArray() {
   return [
     {
       id: 1,
-      name: 'testName1',
       email: 'test1@gmail.com',
       password: 'Password1!',
-      date_created: new Date()
-      
+      date_created: dayjs().utc().format()
     },
     {
       id: 2,
-      name: 'testName2',
       email: 'test2@gmail.com',
       password: 'Password1!',
-      date_created: new Date()
-
+      date_created: dayjs().utc().format()
     },
     {
       id: 3,
-      name: 'testName3',
       email: 'test3@gmail.com',
       password: 'Password1!',
-      date_created: new Date()
-
+      date_created: dayjs().utc().format()
     }
   ]
 }
