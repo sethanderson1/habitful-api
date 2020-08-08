@@ -96,17 +96,17 @@ function makeHabitRecordsArray() {
   return [
     {
       id: 1,
-      date_created: '2020-08-05T07:00:00Z',
+      date_completed: '2020-08-05T07:00:00Z',
       habit_id: 1
     },
     {
       id: 2,
-      date_created: '2020-08-06T07:00:00Z',
+      date_completed: '2020-08-06T07:00:00Z',
       habit_id: 1
     },
     {
       id: 3,
-      date_created: '2020-08-07T07:00:00Z',
+      date_completed: '2020-08-07T07:00:00Z',
       habit_id: 1
     },
   ]

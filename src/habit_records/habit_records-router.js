@@ -79,8 +79,6 @@ habitRecordsRouter
         HabitRecordsService.insertHabitRecord(db, newHabitRecord)
             .then(habitRecord => {
                 res.status(201)
-                    .location(path.posix.join(
-                        req.originalUrl, `/${habitRecord.id}`))
                     .json(HabitRecordsService
                         .serializeHabitRecord(habitRecord))
             })
