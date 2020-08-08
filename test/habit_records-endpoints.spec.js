@@ -88,25 +88,6 @@ describe('HabitRecords Endpoints', () => {
         });
     });
 
-    describe('GET /api/habit-records/1', () => {
-
-        context('Happy path', () => {
-
-            console.log('testHabitRecords[0]', testHabitRecords[0])
-            const expectedHabitRecord = HabitRecordsService.serializeHabitRecord(testHabitRecords[0])
-            // const expectedHabitRecord = testHabitRecords[0]
-            console.log('expectedHabitRecord', expectedHabitRecord)
-            console.log('testHabitRecords[0]', testHabitRecords[0])
-            it(`responds 200, returning single habit_record`, () => {
-                return supertest(app)
-                    .get(`/api/habit-records/record/${testHabitRecords[0].id}`)
-                    .set("Authorization", helpers.makeAuthHeader(testUsers[0]))
-                    .expect(200)
-            });
-        })
-    });
-
-
     describe('DELETE /api/habit-records/1', () => {
 
         context('Happy path', () => {
