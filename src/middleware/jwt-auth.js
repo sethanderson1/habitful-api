@@ -25,11 +25,11 @@ function requireAuth(req, res, next) {
                 next();
             })
             .catch(err => {
-                console.log('err', err)
+                // console.log('err', err)
                 next(err);
             });
     } catch (error) {
-        console.log('error', error)
+        // console.log('error', error)
         res.status(401).json({ error: 'Unauthorized request' });
     };
 };
