@@ -12,12 +12,9 @@ habitsRouter
     .all(requireAuth)
     .get(async (req, res, next) => {
         const { id } = req.user
-        // const id = 1
         const db = req.app.get('db');
         console.log('get route habits reached')
         try {
-
-            console.log('try get')
             const habits = await HabitsService
                 .getAllHabits(db, id)
             console.log('habits', habits)
