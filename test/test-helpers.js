@@ -47,112 +47,97 @@ function seedUsers(db, users) {
 
 // make habits
 
-// function makeHabitsArray() {
-//   return [
-//     {1,
-//       'walk for 1 hour',
-//       null, 
-//       1, 
-//       'day', 
-//       '2020-07-01T16:28:32.615',
-//       '2020-07-01T16:28:32.615',
-//       1},
-//       {2,
-//       'meditate 15 min',
-//       null, 
-//       1, 
-//       'day', 
-//       '2020-07-02T16:28:32.615',
-//       '2020-07-02T16:28:32.615',
-//       1},
-//       {3,
-//       'workout',
-//       null, 
-//       3, 
-//       'week', 
-//       '2020-07-03T16:28:32.615',
-//       '2020-07-03T16:28:32.615',
-//       1};
-//   ]
-// }
+function makeHabitsArray() {
+  return [
+    {
+      id: 1,
+      name: 'walk for 1 hour',
+      description: 'description',
+      num_times: 7,
+      time_interval: 'week',
+      date_created: '2020-07-01T16:28:32.615',
+      user_id: 1
+    },
+    {
+      id: 2,
+      name: 'meditate 15 min',
+      description: 'description 2',
+      num_times: 7,
+      time_interval: 'week',
+      date_created: '2020-07-01T17:28:32.615',
+      user_id: 1
+    },
+    {
+      id: 3,
+      name: 'workout',
+      description: 'workout',
+      num_times: 3,
+      time_interval: 'week',
+      date_created: '2020-07-01T18:28:32.615',
+      user_id: 1
+    },
+  ]
+}
 
-// function seedHabits(db, categories) {
-//   return db
-//     .into("categories")
-//     .insert(categories)
-//     .then(() => {
-//       // update the auto sequence to stay in sync
-//       return db.raw(`SELECT setval('categories_id_seq',?)`, [
-//         categories[categories.length - 1].id,
-//       ]);
-//     });
-// }
+function seedHabits(db, habits) {
+  return db
+    .into("habits")
+    .insert(habits)
+    .then(() => {
+      // update the auto sequence to stay in sync
+      return db.raw(`SELECT setval('habits_id_seq',?)`, [
+        habits[habits.length - 1].id,
+      ]);
+    });
+}
 
 
-// function makeRecipesArray() {
-//   return [
-//     {
-//       id: 1,
-//       title: 'recipe1',
-//       description: 'recipe1 description',
-//       ingredients: 'recipe1 ingredients',
-//       directions: 'recipe1 directions',
-//       category_id: 1,
-//       date_created: new Date(),
-//       date_modified: new Date(),
-//       author_id: 1
-//     },
-//     {
-//       title: 'recipe2',
-//       id: 2,
-//       description: 'recipe2 description',
-//       ingredients: 'recipe2 ingredients',
-//       directions: 'recipe2 directions',
-//       category_id: 2,
-//       date_created: new Date(),
-//       date_modified: new Date(),
-//       author_id: 1
-//     },
-//     {
-//       title: 'recipe3',
-//       id: 3,
-//       description: 'recipe3 description',
-//       ingredients: 'recipe3 ingredients',
-//       directions: 'recipe3 directions',
-//       category_id: 3,
-//       date_created: new Date(),
-//       date_modified: new Date(),
-//       author_id: 1
-//     }
-//   ]
-// }
+function makeHabitRecordsArray() {
+  return [
+    {
+      id: 1,
+      date_created: '2020-08-05T07:00:00Z',
+      habit_id: 1
+    },
+    {
+      id: 2,
+      date_created: '2020-08-06T07:00:00Z',
+      habit_id: 1
+    },
+    {
+      id: 3,
+      date_created: '2020-08-07T07:00:00Z',
+      habit_id: 1
+    },
+  ]
+}
 
-// function seedRecipes(db, recipes) {
-//   return db
-//     .into("recipes")
-//     .insert(recipes)
-//     .then(() => {
-//       // update the auto sequence to stay in sync
-//       return db.raw(`SELECT setval('recipes_id_seq',?)`, [
-//         recipes[recipes.length - 1].id,
-//       ]);
-//     });
-// }
+function seedHabitRecords(db, habit_records) {
+  return db
+    .into("habit_records")
+    .insert(habit_records)
+    .then(() => {
+      // update the auto sequence to stay in sync
+      return db.raw(`SELECT setval('habit_records_id_seq',?)`, [
+        habit_records[habit_records.length - 1].id,
+      ]);
+    });
+}
 
-// function makeAuthHeader(user, secret = process.env.ACCESS_TOKEN_SECRET) {
-//   const token = jwt.sign({ user_id: user.id }, secret, {
-//     subject: user.user_name,
-//     algorithm: "HS256",
-//   });
-//   return `Bearer ${token}`;
-// };
+function makeAuthHeader(user, secret = process.env.ACCESS_TOKEN_SECRET) {
+  const token = jwt.sign({ user_id: user.id }, secret, {
+    subject: user.email,
+    algorithm: "HS256",
+  });
+  return `Bearer ${token}`;
+};
 
 module.exports = {
   makeUsersArray,
   seedUsers,
-  // makeHabitsArray,
-  // seedHabits,
-  // makeRecipesArray,
-  // seedRecipes,
-  // makeAuthHeader
+  makeHabitsArray,
+  seedHabits,
+  makeHabitRecordsArray,
+  seedHabitRecords,
+  makeAuthHeader
 };
