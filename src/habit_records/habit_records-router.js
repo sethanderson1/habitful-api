@@ -10,7 +10,6 @@ habitRecordsRouter
     .route('/')
     .all(requireAuth)
     .get(async (req, res, next) => {
-        console.log('got to habit_records-router get')
 
         // THIS GETS ALL HABIT records FROM A GIVEN USER
         const { id } = req.user
@@ -26,7 +25,6 @@ habitRecordsRouter
     })
     .post(jsonParser, (req, res, next) => {
         const { date_completed, habit_id } = req.body;
-        console.log('req.body', req.body)
         const newHabitRecord = { date_completed, habit_id };
         const db = req.app.get('db');
 

@@ -12,13 +12,11 @@ const UsersService = {
     },
     async insertUser(knex, newUser) {
         newUser.email = newUser.email.toLowerCase();
-        console.log('newUser.email', newUser.email)
         const insertedUser = await knex
             .insert(newUser)
             .into('users')
             .returning('*')
             .then(rows => {
-                // console.log('rows', rows)
                 return rows[0]
             });
 

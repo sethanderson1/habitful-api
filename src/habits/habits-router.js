@@ -13,11 +13,9 @@ habitsRouter
     .get(async (req, res, next) => {
         const { id } = req.user
         const db = req.app.get('db');
-        console.log('get route habits reached')
         try {
             const habits = await HabitsService
                 .getAllHabits(db, id)
-            console.log('habits', habits)
             res.json(habits.map(HabitsService.serializeHabit));
         } catch (err) {
             next();
@@ -25,8 +23,6 @@ habitsRouter
     })
     .post(jsonParser, (req, res, next) => {
         const { id } = req.user
-        console.log('req.body', req.body)
-        // const id = 1
         req.body.user_id = id;
         const { name, description, num_times,
             time_interval, date_created, user_id } = req.body;
@@ -35,11 +31,9 @@ habitsRouter
             name, description, num_times,
             time_interval, date_created, user_id
         };
-        console.log('newHabit', newHabit)
         const db = req.app.get('db');
 
         for (const [key, value] of Object.entries(newHabit)) {
-            // is using == bad practice?
             if (value == null && key !== 'description') {
                 return res.status(400).json({
                     error: {
@@ -65,8 +59,6 @@ habitsRouter
     .all(requireAuth)
     .all((req, res, next) => {
         const { id } = req.user;
-        console.log('id', id)
-        // const id = 1;
         const { habit_id } = req.params;
         const db = req.app.get('db');
         HabitsService.getById(

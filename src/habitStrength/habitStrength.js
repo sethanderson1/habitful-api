@@ -33,15 +33,14 @@ const habitStrength = () => {
         habitStrength = habitStrength < 0 ? 0 : habitStrength;
         habitStrength = habitStrength > 1 ? 1 : habitStrength;
 
-        console.log('day', i, 'habitStrength', habitStrength)
     }
 
-    console.log('dummyCheckMarkArr', dummyCheckMarkArr)
+    // console.log('dummyCheckMarkArr', dummyCheckMarkArr)
     const countOccurrences = (arr) => arr.reduce((a, v) => (v > 0 ? a + 1 : a), 0);
     const numCompletions = countOccurrences(dummyCheckMarkArr);
-    console.log('checkMarkWeight', checkMarkWeight)
-    console.log('multiplier', multiplier)
-    console.log('numCompletions', numCompletions, '/', numDays)
+    // console.log('checkMarkWeight', checkMarkWeight)
+    // console.log('multiplier', multiplier)
+    // console.log('numCompletions', numCompletions, '/', numDays)
 }
 
 module.exports = habitStrength;

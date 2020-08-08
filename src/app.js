@@ -25,7 +25,6 @@ app.use(
         origin: CLIENT_ORIGIN
     })
 );
-console.log('reaching app.js')
 app.use(`/api/users`, usersRouter);
 app.use(`/api/habits`, habitsRouter);
 app.use(`/api/habit-records`, habitRecordsRouter);

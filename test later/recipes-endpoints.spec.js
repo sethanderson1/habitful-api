@@ -111,7 +111,6 @@ describe('Recipes Endpoints', () => {
         context('Happy path', () => {
 
             const expectedRecipe = RecipesService.serializeRecipe(testRecipes[0])
-            console.log('testRecipes[0]', testRecipes[0])
             it(`responds 200, returning single recipe`, () => {
                 return supertest(app)
                     .get(`/api/recipes/${testRecipes[0].id}`)

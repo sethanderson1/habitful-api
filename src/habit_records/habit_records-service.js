@@ -30,7 +30,6 @@ const HabitRecordsService = {
     },
 
     getHabitRecordsByHabitId(knex, habit_id) {
-        console.log('habit_id', habit_id)
         return knex
             .select('*')
             .from('habit_records')
@@ -51,17 +50,8 @@ const HabitRecordsService = {
             .delete();
     },
 
-    // updateHabitRecord(knex, id, updatedHabitdRecord) {
-    //     return knex('habit_records')
-    //         .where({ id })
-    //         .update(updatedHabitdRecord);
-    // },
-
     serializeHabitRecord(habit_records) {
-        // WITH UTC CONVERSION
         const date_completed_sanitized = xss(habit_records.date_completed);
-        // xss converts date from UTC to local, so use dayjs to 
-        // convert back to UTC
         const date_completed = dayjs(
             date_completed_sanitized
         )

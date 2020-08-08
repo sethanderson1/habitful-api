@@ -12,7 +12,6 @@ usersRouter
         res.status(201).json('hello world')
     })
     .post(jsonParser, async (req, res, next) => {
-        console.log('post user ran')
         try {
             const knexInstance = req.app.get('db');
             const { email, password, date_created } = req.body;
