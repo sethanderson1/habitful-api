@@ -54,7 +54,7 @@ authRouter
             });
 
         } catch (err) {
-            console.log('err', err)
+            // console.log('err', err)
             next();
         };
     });

@@ -19,7 +19,7 @@ habitRecordsRouter
                 .getAllHabitRecordsByUser(db, id)
             res.json(habit_records)
         } catch (err) {
-            console.log('err', err)
+            // console.log('err', err)
             next();
         };
     })
