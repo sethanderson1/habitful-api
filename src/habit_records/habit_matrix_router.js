@@ -5,6 +5,9 @@ const HabitsService = require('../habits/habits-service')
 const { requireAuth } = require('../middleware/jwt-auth')
 const habitMatrixRouter = express.Router()
 const jsonParser = express.json()
+const dayjs = require('dayjs');
+const utc = require('dayjs/plugin/utc');
+dayjs.extend(utc)
 
 async function getHabitsForUser(knex, userID) {
     return knex('habits')
@@ -12,7 +15,7 @@ async function getHabitsForUser(knex, userID) {
         .select()
 }
 
-async function getCheckedStatus(knex, { startDate, endDate, userID, habitID }) {
+async function _getCheckedStatusWithGaps(knex, { startDate, endDate, userID, habitID }) {
     const query = knex('habit_records')
     if (habitID) {
         query.where('habit_id', habitID)
@@ -51,12 +54,78 @@ async function getCheckedStatus(knex, { startDate, endDate, userID, habitID }) {
     // )
 
     const data = await query
+
     return data
 }
 
 
+async function getCheckedStatus(knex, { startDate, endDate, userID, habitID }) {
+
+    if (!habitID) {
+        // need data for all habits
+        const habitIDs = (await getHabitsForUser(knex, userID))
+            .map(h => h.id)
+        let promises = []
+        let returnValue = {}
+        habitIDs.forEach(id => {
+            const promise = getCheckedStatus(
+                knex,
+                { startDate, endDate, userID, habitID: id }
+            )
+                .then(data => returnValue[id] = data)
+
+            promises.push(promise)
+        })
+        await Promise.all(promises)
+        return returnValue
+    }
+
+    const query = knex.raw(
+        `
+        
+        select 
+        --- checked = count by habit.id since the join also filters by user
+        calendar_day ,count(h.id) as checked
+        
+        -- debug if needed
+        -- , Max(h.id) as habit_id, Max(h.user_id) as user_id
+        
+        -- first select all individual days with generate_series
+        from  (select generate_series(:startDate, :endDate, '1 day'::interval)::date as calendar_day)  as cal_days
+        
+        -- match the generated days to habit_records
+        left join habit_records hr on calendar_day = hr.date_completed and hr.habit_id=:habitID
+
+        -- filter by user 
+        left join habits h on h.id = hr.habit_id and h.user_id=:userID
+        
+        -- group and sort
+        group by calendar_day 
+        order by calendar_day asc 
+        `,
+        {
+            startDate,
+            endDate,
+            habitID: +habitID,
+            userID: +userID
+        }
+
+    )
+    // console.log(query.toSQL())
+
+    //rows is guaranteed to include all calendar days in chronological order
+    const { rows } = await query
+    rows.forEach(r => {
+        r.calendar_day = dayjs(r.calendar_day).utc().format('YYYY-MM-DD')
+        r.checked = +r.checked === 1
+    });
+    console.log(rows)
+    return rows
+}
+
+
 habitMatrixRouter
-    // params : startDate: mm-dd-yy, endDate: mm-dd-yy, 
+    // params : startDate: yyyy-mm-dd, endDate: yyyy-mm-dd, 
     // habitID: an id or the special value 'all'
 
     .route('/:startDate/:endDate/:idFilter')
