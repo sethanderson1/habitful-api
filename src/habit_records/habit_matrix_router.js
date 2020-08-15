@@ -18,6 +18,7 @@ async function getCheckedStatus(knex, { startDate, endDate, userID, habitID }) {
         query.where('habit_id', habitID)
     }
 
+
     query
         .innerJoin('habits', `habit_records.habit_id`, `habits.id`)
         .where('habits.user_id', userID)
@@ -37,8 +38,18 @@ async function getCheckedStatus(knex, { startDate, endDate, userID, habitID }) {
             knex.raw('count(habit_records.id) as checked'),
 
             // format date with postgres
-            knex.raw(`to_char("date_completed", 'YYYY-MM-DD') as day`),
+            // knex.raw(`to_char("date_completed", 'YYYY-MM-DD') as day`),
+            knex.raw(`"date_completed"::date as day`),
         )
+    // query.joinRaw(
+    //     `RIGHT JOIN 
+    //         (select (generate_series(?, ?, '1 day'::interval))::date) as calendar_day 
+    //         on calendar_day::date = habit_records.date_completed::date 
+    //         `,
+    //     [startDate,
+    //         endDate]
+    // )
+
     const data = await query
     return data
 }
