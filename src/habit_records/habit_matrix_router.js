@@ -15,50 +15,6 @@ async function getHabitsForUser(knex, userID) {
         .select()
 }
 
-async function _getCheckedStatusWithGaps(knex, { startDate, endDate, userID, habitID }) {
-    const query = knex('habit_records')
-    if (habitID) {
-        query.where('habit_id', habitID)
-    }
-
-
-    query
-        .innerJoin('habits', `habit_records.habit_id`, `habits.id`)
-        .where('habits.user_id', userID)
-
-    query
-        .whereRaw('DATE(date_completed)>=?::date', startDate)
-        .whereRaw('DATE(date_completed)<=?::date', endDate)
-        .groupBy('day')
-        .orderBy('date_completed_max')
-        .select(
-            // 'id',
-
-            // this is used to sort the records in chronological order
-            knex.raw(`MAX(date_completed) as date_completed_max`),
-
-            // count should be at MOST 1, otherwise you have duplicate records on the same day
-            knex.raw('count(habit_records.id) as checked'),
-
-            // format date with postgres
-            // knex.raw(`to_char("date_completed", 'YYYY-MM-DD') as day`),
-            knex.raw(`"date_completed"::date as day`),
-        )
-    // query.joinRaw(
-    //     `RIGHT JOIN 
-    //         (select (generate_series(?, ?, '1 day'::interval))::date) as calendar_day 
-    //         on calendar_day::date = habit_records.date_completed::date 
-    //         `,
-    //     [startDate,
-    //         endDate]
-    // )
-
-    const data = await query
-
-    return data
-}
-
-
 async function getCheckedStatus(knex, { startDate, endDate, userID, habitID }) {
 
     if (!habitID) {
@@ -82,42 +38,49 @@ async function getCheckedStatus(knex, { startDate, endDate, userID, habitID }) {
 
     const query = knex.raw(
         `
-        
-        select 
-        --- checked = count by habit.id since the join also filters by user
-        calendar_day ,count(h.id) as checked
+              
+        -- checked = count by habit.id since the join also filters by user
+        -- all SELECT fields must be aggregated because we use GROUP BY
+        SELECT calendar_day ,count(h.id) AS checked, Max(hr.id) as habit_record_id
         
         -- debug if needed
-        -- , Max(h.id) as habit_id, Max(h.user_id) as user_id
+        -- , Max(h.id) AS habit_id, Max(h.user_id) AS user_id
         
-        -- first select all individual days with generate_series
-        from  (select generate_series(:startDate, :endDate, '1 day'::interval)::date as calendar_day)  as cal_days
+        -- first SELECT all individual days with generate_series
+        FROM  (SELECT generate_series(:startDate, :endDate, '1 day'::interval)::date AS calendar_day)  AS cal_days
         
         -- match the generated days to habit_records
-        left join habit_records hr on calendar_day = hr.date_completed and hr.habit_id=:habitID
+        LEFT JOIN habit_records hr on calendar_day = hr.date_completed and hr.habit_id=:habitID
 
         -- filter by user 
-        left join habits h on h.id = hr.habit_id and h.user_id=:userID
+        LEFT JOIN habits h on h.id = hr.habit_id and h.user_id=:userID
         
         -- group and sort
-        group by calendar_day 
-        order by calendar_day asc 
+        GROUP BY calendar_day 
+        ORDER BY calendar_day asc 
         `,
         {
             startDate,
             endDate,
-            habitID: +habitID,
-            userID: +userID
+            habitID: +habitID, //convert to int
+            userID: +userID //convert to int
         }
 
     )
     // console.log(query.toSQL())
 
-    //rows is guaranteed to include all calendar days in chronological order
+    //NOTE: rows is guaranteed to include all calendar days in chronological order
     const { rows } = await query
     rows.forEach(r => {
+
+        //format calendar days
         r.calendar_day = dayjs(r.calendar_day).utc().format('YYYY-MM-DD')
-        r.checked = +r.checked === 1
+
+        //convert checked to int, then to boolean
+        r.checked = +r.checked > 0
+        if (!r.checked) {
+            r.habit_record_id = null
+        }
     });
     console.log(rows)
     return rows
@@ -125,9 +88,61 @@ async function getCheckedStatus(knex, { startDate, endDate, userID, habitID }) {
 
 
 habitMatrixRouter
+    // toggle checked/unchecked
+    .route('/toggle/:date/:habitID')
+    .all(requireAuth)
+    .post(async (req, res, next) => {
+        const { id: userID } = req.user
+        const { date, habitID } = req.params
+        const db = req.app.get('db')
+        try {
+            //getCheckedStatus return an array (by day), so select the only element
+            const current = (await getCheckedStatus(db, {
+                startDate: date,
+                endDate: date,
+                userID,
+                habitID,
+            }))[0]
+            console.log(`current`, current)
+
+
+            if (current.checked) {
+                //uncheck
+                await HabitRecordsService
+                    .deleteHabitRecord(
+                        db,
+                        current.habit_record_id
+                    )
+            }
+            else {
+                //check
+                await HabitRecordsService.insertHabitRecord(db, {
+                    date_completed: date,
+                    habit_id: habitID,
+                })
+            }
+
+
+            //refetch
+            const habitRecord = (await getCheckedStatus(db, {
+                startDate: date,
+                endDate: date,
+                userID,
+                habitID,
+            }))[0]
+            res.json({ habitRecord })
+
+        } catch (err) {
+            console.error('err', err)
+            next()
+        }
+    })
+
+habitMatrixRouter
+    // get a checked matrix for a date range an a habit id (or all habits)
+
     // params : startDate: yyyy-mm-dd, endDate: yyyy-mm-dd, 
     // habitID: an id or the special value 'all'
-
     .route('/:startDate/:endDate/:idFilter')
     .all(requireAuth)
     .get(async (req, res, next) => {
@@ -138,7 +153,6 @@ habitMatrixRouter
         console.log(`endDate`, endDate)
 
 
-        // THIS GETS ALL HABIT records FROM A GIVEN USER
         const { id: userID } = req.user
         const db = req.app.get('db')
         try {
