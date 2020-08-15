@@ -82,7 +82,7 @@ async function getCheckedStatus(knex, { startDate, endDate, userID, habitID }) {
             r.habit_record_id = null
         }
     });
-    console.log(rows)
+    // console.log(rows)
     return rows
 }
 
