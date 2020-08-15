@@ -89,6 +89,7 @@ async function getCheckedStatus(knex, { startDate, endDate, userID, habitID }) {
 
 habitMatrixRouter
     // toggle checked/unchecked
+    // example: POST to localhost:8000/api/habit-matrix/toggle/2020-08-09/1
     .route('/toggle/:date/:habitID')
     .all(requireAuth)
     .post(async (req, res, next) => {
@@ -140,6 +141,7 @@ habitMatrixRouter
 
 habitMatrixRouter
     // get a checked matrix for a date range an a habit id (or all habits)
+    // example: GET localhost:8000/api/habit-matrix/2020-08-09/2020-08-15/1
 
     // params : startDate: yyyy-mm-dd, endDate: yyyy-mm-dd, 
     // habitID: an id or the special value 'all'
