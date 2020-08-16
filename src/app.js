@@ -12,7 +12,6 @@ const usersRouter = require('./users/users-router');
 // const authRouter = require('./auth/auth-router');
 const habitsRouter = require('./habits/habits-router');
 const habitRecordsRouter = require('./habit_records/habit_records-router');
-const habitMatrixRouter = require('./habit_records/habit_matrix_router');
 const authRouter = require('./auth/auth-router');
 
 const app = express();
@@ -31,7 +30,6 @@ app.use(`/api/users`, usersRouter);
 app.use(`/api/habits`, habitsRouter);
 app.use(`/api/habit-records`, habitRecordsRouter);
 
-app.use(`/api/habit-matrix`, habitMatrixRouter);
 
 app.use(`/api/auth`, authRouter);
 
