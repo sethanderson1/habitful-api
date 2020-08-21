@@ -32,6 +32,10 @@ app.use(`/api/habit-records`, habitRecordsRouter);
 
 
 app.use(`/api/auth`, authRouter);
+// to wake up heroku
+app.use(`/api/ping`, async (req,res) => {
+    res.send(`warm up ping recieved`);
+})
 
 // app.get('/', async (req, res) => {
 //     const records = await knex
