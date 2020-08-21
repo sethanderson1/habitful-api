@@ -4,12 +4,9 @@ const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 const { NODE_ENV } = require('./config');
-const dayjs = require('dayjs');
 const { CLIENT_ORIGIN } = require('./config');
 
-
 const usersRouter = require('./users/users-router');
-// const authRouter = require('./auth/auth-router');
 const habitsRouter = require('./habits/habits-router');
 const habitRecordsRouter = require('./habit_records/habit_records-router');
 const authRouter = require('./auth/auth-router');
@@ -29,25 +26,12 @@ app.use(
 app.use(`/api/users`, usersRouter);
 app.use(`/api/habits`, habitsRouter);
 app.use(`/api/habit-records`, habitRecordsRouter);
-
-
 app.use(`/api/auth`, authRouter);
 // to wake up heroku
 app.use(`/api/ping`, async (req,res) => {
     res.send(`warm up ping recieved`);
 })
 
-// app.get('/', async (req, res) => {
-//     const records = await knex
-//         // look at the records
-//         .from('habit_records')
-//         //and join with habits in order to get habit name, etc.
-//         .innerJoin('habits', `habit_records.habit_id`, `habits.id`)
-//         //filter by record date. and by interval es^pecially
-//         // .where('habit_records.date_completed', '2020-07-12 22:52:05')
-//         .select(['habits.name', 'habit_records.date_completed']);
-//     res.send(JSON.stringify({ records }));
-// })
 
 app.use(function errorHandler(error, req, res, next) {
     let response

@@ -6,8 +6,6 @@ const jsonParser = express.json();
 authRouter
     .route('/login')
     .post(jsonParser, async (req, res, next) => {
-
-        // console.log('req.body.email', req.body.email)
         req.body.email = req.body.email && req.body.email.toLowerCase();
         const { email, password } = req.body;
         const loginUser = { email, password };

@@ -5,8 +5,6 @@ const { requireAuth } = require('../middleware/jwt-auth');
 const habitsRouter = express.Router();
 const jsonParser = express.json();
 
-// todo: uncomment const id = 1 when put in requireAuth
-
 habitsRouter
     .route('/')
     .all(requireAuth)

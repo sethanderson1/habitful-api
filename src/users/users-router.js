@@ -23,7 +23,6 @@ usersRouter
                 };
             };
 
-
             // verify email not taken
             const hasEmail = await UsersService
                 .hasUserWithEmail(knexInstance, email)

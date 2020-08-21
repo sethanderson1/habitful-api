@@ -4,9 +4,7 @@ const xss = require('xss');
 const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/;
 
 const UsersService = {
-    // getAllUsers(knex) {
-    //     return knex.select('*').from('users');
-    // },
+
     hashPassword(password) {
         return bcrypt.hash(password, 10);
     },

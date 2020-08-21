@@ -10,10 +10,7 @@ const HabitRecordsService = {
             .from('habit_records')
             .innerJoin('habits', `habit_records.habit_id`, `habits.id`)
             .where({ user_id });
-        // todo: for testing remove after
-        // return null
         return returnedHabitRecords
-
     },
 
     insertHabitRecord(knex, newHabitRecord) {
