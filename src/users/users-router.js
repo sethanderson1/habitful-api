@@ -57,6 +57,7 @@ usersRouter
                 .location(path.posix.join(req.originalUrl, `/${user.id}`))
                 .json(user);
         } catch (err) {
+            console.log('err', err)
             next();
         };
     });
