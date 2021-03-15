@@ -21,6 +21,7 @@ const UsersService = {
         return insertedUser
     },
     hasUserWithEmail(knex, email) {
+        console.log('knex', knex)
         email = email.toLowerCase();
         return knex.select('*')
             .from('users')
