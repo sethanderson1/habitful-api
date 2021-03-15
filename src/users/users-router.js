@@ -58,6 +58,7 @@ usersRouter
             const user = await UsersService.insertUser(knexInstance, sanitizedUser);
             console.log('user', user)
 
+            console.log('path.posix.join(req.originalUrl, `/${user.id}`)', path.posix.join(req.originalUrl, `/${user.id}`))
             res.status(201)
                 .location(path.posix.join(req.originalUrl, `/${user.id}`))
                 .json(user);
