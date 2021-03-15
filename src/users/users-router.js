@@ -9,9 +9,11 @@ const jsonParser = express.json();
 usersRouter
     .route('/')
     .get((req, res, next) => {
+        console.log('req in get users', req)
         res.status(201).json('hello world')
     })
     .post(jsonParser, async (req, res, next) => {
+        console.log('req in post users', req)
         try {
             const knexInstance = req.app.get('db');
             const { email, password, date_created } = req.body;
