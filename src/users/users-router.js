@@ -18,6 +18,7 @@ usersRouter
             const knexInstance = req.app.get('db');
             const { email, password, date_created } = req.body;
             for (const field of ['email', 'password']) {
+                console.log('field', field)
                 if (!req.body[field]) {
                     return res.status(400).json({
                         error: { message: `Missing '${field}' in request body` }
@@ -36,6 +37,7 @@ usersRouter
 
             // validate password
             if (UsersService.validatePassword(password)) {
+                console.log('password', password)
                 return res.status(400).json({
                     error: { message: UsersService.validatePassword(password) }
                 });
@@ -44,14 +46,17 @@ usersRouter
             // hash password and insert user in database
             const hashedPassword = await UsersService.hashPassword(password);
 
+            console.log('hashedPassword', hashedPassword)
             const newUser = {
                 email,
                 password: hashedPassword,
                 date_created
             };
+            console.log('date_created', date_created)
 
             const sanitizedUser = await UsersService.serializeUser(newUser);
             const user = await UsersService.insertUser(knexInstance, sanitizedUser);
+            console.log('user', user)
 
             res.status(201)
                 .location(path.posix.join(req.originalUrl, `/${user.id}`))
